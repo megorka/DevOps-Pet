@@ -1,5 +1,3 @@
 meta.txt
 .terraform
 .terraform.lock.hcl
-*.tfstate
-*.tfstate.backup
