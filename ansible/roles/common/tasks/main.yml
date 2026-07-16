@@ -1,0 +1,54 @@
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+    - name: Update apt
+      apt:
+        upgrade: safe
+
+    - name: Install ufw
+      apt:
+        name: ufw
+        state: present
+      
+    - name: UFW settings outgoing
+      ufw:
+        default: allow
+        direction: outgoing
+    
+    - name: UFW setting incoming
+      ufw:
+        default: deny
+        direction: incoming
+
+    - name: UFW rules ssh/
+      ufw:
+        rule: allow
+        port: "22"
+        proto: tcp
+
+    - name: UFW rules http
+      ufw:
+        rule: allow
+        port: "80"
+        proto: tcp 
+    
+    - name: UFW rules https
+      ufw:
+        rule: allow
+        port: "443"
+        proto: tcp 
+
+    - name: UFW enabled
+      ufw:
+        state: enabled
+    
+
+    - name: Install base
+      apt:
+        name:
+          - git
+          - curl
+          - unzip
+          - htop
+        state: present

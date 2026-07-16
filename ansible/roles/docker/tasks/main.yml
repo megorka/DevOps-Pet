@@ -1,0 +1,12 @@
+- name: Update apt cache
+  apt:
+    update_cache: true
+
+- name: Upgrade apt
+  apt:
+    upgrade: safe
+
+- name: Install docker
+  apt:
+    name: docker.io
+    state: present

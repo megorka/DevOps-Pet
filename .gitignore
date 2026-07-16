@@ -1,3 +1,4 @@
 meta.txt
 .terraform
 .terraform.lock.hcl
+README.md

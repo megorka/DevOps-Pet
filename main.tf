@@ -17,19 +17,20 @@ resource "yandex_vpc_security_group" "test-sg" {
     protocol       = "TCP"
     description    = "SSH"
     port           = 22
-    v4_cidr_blocks = ["0.0.0.0/24"]
+    v4_cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     protocol       = "ANY"
     description    = "for blocking any port"
-    v4_cidr_blocks = ["0.0.0.0/24"]
+    v4_cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
 resource "yandex_compute_instance" "test" {
+  count = 1
   boot_disk {
     initialize_params {
-      name       = "disk-ubuntu-24-04-lts-1784117163428"
+      name       = "disk-ubuntu-24-04-lts-1784117163428--${count.index}"
       type       = "network-ssd"
       size       = 20
       block_size = 4096
@@ -37,15 +38,15 @@ resource "yandex_compute_instance" "test" {
     }
     auto_delete = true
   }
-  hostname = "test"
+  hostname = "test-${count.index}"
   metadata = {
     user-data = "${file("meta.txt")}"
   }
-  name = "test"
+  name = "test-${count.index}"
   network_interface {
-    subnet_id = yandex_vpc_subnet.subnet.id
-    index     = 0
-    nat       = true
+    subnet_id          = yandex_vpc_subnet.subnet.id
+    index              = 0
+    nat                = count.index == 0 ? true : false
     security_group_ids = [yandex_vpc_security_group.test-sg.id]
   }
   platform_id = "standard-v3"
@@ -57,4 +58,5 @@ resource "yandex_compute_instance" "test" {
   scheduling_policy {
     preemptible = false
   }
+  zone = "ru-central1-d"
 }
