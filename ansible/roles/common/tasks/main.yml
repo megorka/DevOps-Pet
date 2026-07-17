@@ -21,7 +21,7 @@
         default: deny
         direction: incoming
 
-    - name: UFW rules ssh/
+    - name: UFW rules ssh
       ufw:
         rule: allow
         port: "22"
@@ -42,7 +42,6 @@
     - name: UFW enabled
       ufw:
         state: enabled
-    
 
     - name: Install base
       apt:
