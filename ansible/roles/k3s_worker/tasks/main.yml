@@ -1,0 +1,32 @@
+- name: Check if k3s binary exists
+  stat:
+    path: /usr/local/bin/k3s
+  register: k3s_binary
+
+- name: Download k3s binary directly via Ansible
+  get_url:
+    url: "https://github.com/k3s-io/k3s/releases/download/v{{ k3s_version }}/k3s"
+    dest: /usr/local/bin/k3s
+    mode: '0755'
+  when: not k3s_binary.stat.exists
+  retries: 5
+  delay: 15
+
+- name: Install k3s agent without re-downloading binary
+  shell: |
+    curl -sfL https://get.k3s.io | \
+    INSTALL_K3S_SKIP_DOWNLOAD=true \
+    INSTALL_K3S_VERSION={{ k3s_version }} \
+    K3S_URL=https://{{ hostvars[groups['k3s_master'][0]]['ansible_host'] }}:6443 \
+    K3S_TOKEN={{ hostvars[groups['k3s_master'][0]]['k3s_token'] }} \
+    sh -
+  register: install_result
+  retries: 3
+  delay: 10
+  until: install_result is succeeded
+
+- name: Ensure k3s-agent service is enabled and running
+  systemd:
+    name: k3s-agent
+    state: started
+    enabled: true

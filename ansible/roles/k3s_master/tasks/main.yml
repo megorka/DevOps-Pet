@@ -1,0 +1,56 @@
+- name: Check k3s installation
+  systemd:
+    name: k3s
+  register: k3s_service_status
+  ignore_errors: true
+
+- name: Download k3s binary directly via Ansible
+  get_url:
+    url: "https://github.com/k3s-io/k3s/releases/download/v{{ k3s_version | urlencode }}/k3s"
+    dest: /usr/local/bin/k3s
+    mode: '0755'
+  register: k3s_download
+  retries: 5
+  delay: 15
+  until: k3s_download is succeeded
+  
+
+- name: Run k3s install script without re-downloading binary
+  shell: |
+    curl -sfL https://get.k3s.io | \
+      INSTALL_K3S_SKIP_DOWNLOAD=true \
+      INSTALL_K3S_VERSION={{ k3s_version }} \
+      sh -s - server \
+      --write-kubeconfig-mode 644 \
+      --tls-san {{ ansible_host }}
+  register: install_result
+  retries: 3
+  delay: 10
+  when: k3s_service_status.status.ActiveState != "active"
+  until: install_result is succeeded
+
+- name: Wait for k3s service to be active
+  systemd:
+    name: k3s
+    state: started
+    enabled: true
+
+- name: Wait for node-token
+  wait_for:
+    path: /var/lib/rancher/k3s/server/node-token
+    timeout: 90
+
+- name: Fetch node node-token
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: node_token
+
+- name: Save token as fact for worker-node
+  set_fact:
+    k3s_token: "{{ node_token.content | b64decode | trim }}"
+
+- name: Fetch kubeconfig
+  fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ./kubeconfig
+    flat: true
