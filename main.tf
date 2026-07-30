@@ -47,6 +47,13 @@ resource "yandex_vpc_security_group" "test-sg" {
     protocol       = "TCP"
     description    = "Kuber"
     port           = 6443
+    v4_cidr_blocks = ["10.0.0.0/23"]
+  }
+  ingress {
+    protocol = "TCP"
+    description = "ports"
+    from_port = 30000
+    to_port = 32767
     v4_cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
@@ -125,6 +132,7 @@ resource "local_file" "ansible_inventory" {
   filename = "${path.module}/ansible/inventory.ini"
   content = templatefile("${path.module}/templates/inventory.tpl", {
     master_ip  = yandex_compute_instance.test[0].network_interface[0].nat_ip_address
+    master_ip_internal = yandex_compute_instance.test[0].network_interface[0].ip_address
     worker_ips = [for i in yandex_compute_instance.test : i.network_interface[0].ip_address if i != yandex_compute_instance.test[0]]
   })
 }

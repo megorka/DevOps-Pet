@@ -17,7 +17,7 @@
     curl -sfL https://get.k3s.io | \
     INSTALL_K3S_SKIP_DOWNLOAD=true \
     INSTALL_K3S_VERSION={{ k3s_version }} \
-    K3S_URL=https://{{ hostvars[groups['k3s_master'][0]]['ansible_host'] }}:6443 \
+    K3S_URL=https://{{ hostvars[groups['k3s_master'][0]]['ansible_host_internal'] }}:6443 \
     K3S_TOKEN={{ hostvars[groups['k3s_master'][0]]['k3s_token'] }} \
     sh -
   register: install_result
