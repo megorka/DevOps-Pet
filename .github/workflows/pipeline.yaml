@@ -39,7 +39,12 @@ jobs:
       
       - name: Terraform plan
         id: plan
-        run: terraform plan -no-color
+        run: |
+          terraform plan \
+          -no-color \
+          -var="sa_key_file=key.json" \
+          -var="cloud_id=${{ YC_CLOUD_ID }}" \
+          -var="folder_id=${{ YC_FOLDER_ID }}"
         continue-on-error: true
       
       - name: Comment PR
