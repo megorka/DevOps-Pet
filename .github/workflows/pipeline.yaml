@@ -8,6 +8,10 @@ on:
     branches:
       - main
       - 'feat/**'
+      
+permissions:
+  pull-requests: write
+  contents: read
 
 jobs:
   terraform:
