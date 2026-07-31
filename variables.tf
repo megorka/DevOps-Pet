@@ -4,7 +4,7 @@ variable "sa_key_file" {
 }
 
 variable "cloud_id" {
-  description = "cloud id"
+  description = "cloud id "
   type = string
 }
 
