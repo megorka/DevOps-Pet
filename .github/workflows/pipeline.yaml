@@ -34,6 +34,9 @@ jobs:
       - name: Write service account key
         run: echo '${{ secrets.YC_SA_JSON_CREDENTIALS }}' > key.json
       
+      - name: Write meta file
+        run: echo '${{ secrets.TF_META }}' > meta.txt
+
       - name: Terraform init
         run: terraform init
       
@@ -44,10 +47,13 @@ jobs:
           -no-color \
           -var="sa_key_file=key.json" \
           -var="cloud_id=${{ secrets.YC_CLOUD_ID }}" \
-          -var="folder_id=${{ secrets.YC_FOLDER_ID }}"
+          -var="folder_id=${{ secrets.YC_FOLDER_ID }}" \
+          -var="meta_file=meta.txt"
         continue-on-error: true
       
+      
       - name: Comment PR
+        if: github.event_name == "pull_request"
         uses: actions/github-script@v7
         with:
           script: |

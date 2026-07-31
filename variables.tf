@@ -12,3 +12,8 @@ variable "folder_id" {
     description = "folder id"
     type = string
 }
+
+variable "meta_file" {
+    description = "meta file"
+    type = string
+}

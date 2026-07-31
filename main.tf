@@ -107,7 +107,7 @@ resource "yandex_compute_instance" "test" {
   }
   hostname = "test-${count.index}"
   metadata = {
-    user-data = "${file("meta.txt")}"
+    user-data = var.meta_file
   }
   name = "test-${count.index}"
   network_interface {
