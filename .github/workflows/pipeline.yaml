@@ -33,6 +33,7 @@ jobs:
           filters: |
             terraform:
               - '**/*.tf'
+              - '*.tf'
             k8s:
               - 'k8s/*.yml'
       

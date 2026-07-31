@@ -9,7 +9,7 @@ variable "cloud_id" {
 }
 
 variable "folder_id" {
-    description = "folder id"
+    description = "folder id "
     type = string
 }
 
