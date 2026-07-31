@@ -16,6 +16,9 @@ permissions:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env: 
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     
     steps:
       - name: Checkout repo
@@ -51,9 +54,6 @@ jobs:
           EOF
 
       - name: Terraform init
-        env: 
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         if: steps.changes.outputs.terraform == 'true'
         run: terraform init
       

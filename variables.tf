@@ -1,5 +1,5 @@
 variable "sa_key_file" {
-    description = "sa key files"
+    description = "sa key files "
     type = string
 }
 
