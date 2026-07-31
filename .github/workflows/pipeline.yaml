@@ -16,6 +16,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Installing terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.14.6"
+
       - name: Get changes
         id: changes
         uses: dorny/paths-filter@v3
