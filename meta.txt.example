@@ -7,4 +7,5 @@ users:
       ssh_authorized_keys:
         - 'ssh-1'
         - 'ssh-2'
+        - '...'
         - 'ssh-n'
