@@ -43,8 +43,8 @@ jobs:
           terraform plan \
           -no-color \
           -var="sa_key_file=key.json" \
-          -var="cloud_id=${{ YC_CLOUD_ID }}" \
-          -var="folder_id=${{ YC_FOLDER_ID }}"
+          -var="cloud_id=${{ secrets.YC_CLOUD_ID }}" \
+          -var="folder_id=${{ secrets.YC_FOLDER_ID }}"
         continue-on-error: true
       
       - name: Comment PR
