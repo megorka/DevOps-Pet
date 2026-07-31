@@ -35,7 +35,12 @@ jobs:
         run: echo '${{ secrets.YC_SA_JSON_CREDENTIALS }}' > key.json
       
       - name: Write meta file
-        run: echo '${{ secrets.TF_META }}' > meta.txt
+        env: 
+          META_CONTENT: ${{ secrets.TF_META }}
+        run: |
+          cat <<EOF> meta.txt
+          $META_CONTENT
+          EOF
 
       - name: Terraform init
         run: terraform init
